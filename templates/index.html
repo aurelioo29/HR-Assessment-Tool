@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Attrition Insight</title>
+
+    <!-- Import Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .faq-background {
+        background-image: url("{{ url_for('static', filename='assets/1.svg') }}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .green-text {
+        color: green;
+        font-weight: bold;
+      }
+      .red-text {
+        color: red;
+        font-weight: bold;
+      }
+
+      label {
+        padding-bottom: 8px;
+      }
+
+      #probability {
+        font-size: 15px;
+      }
+
+      .prob-text {
+        font-weight: bold;
+      }
+
+      /* RESULT */
+      #result-text {
+        font-size: 30px;
+        text-decoration: underline;
+      }
+      #predictionResult {
+        font-size: 1em;
+        font-weight: bold;
+      }
+
+      /* TABLES RESULT DATA*/
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        border-bottom: 1px solid #666666;
+      }
+      .key {
+        font-weight: bold;
+      }
+      .value {
+        margin-left: auto;
+      }
+
+      /* Table styling */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      th {
+        background-color: #3498db;
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .faq-background {
+          padding: 1rem;
+          background-size: contain;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-primary-subtle rounded-4 shadow-lg mt-3 mx-2 p-2 sticky-top"
+    >
+      <div class="container">
+        <a class="navbar-brand fst-italic fw-bold fs-2 text-wrap" href="#"
+          >Employee Attrition Insight</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto text-center">
+            <li class="nav-item px-lg-5 py-2">
+              <a class="nav-link" href="#intro">Introduction</a>
+            </li>
+            <li class="nav-item py-2">
+              <a class="nav-link" href="#app">Let's Try</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Introduction Section -->
+    <section class="intro" id="intro">
+      <div class="container text-center mt-5">
+        <!-- Gambar -->
+        <div class="image">
+          <img
+            src="{{ url_for('static', filename='assets/introduction.png') }}"
+            alt="image"
+            class="img-fluid rounded shadow"
+          />
+        </div>
+      </div>
+
+      <!-- FAQ Accordion -->
+      <div class="container-fluid mt-5">
+        <div class="faq-background p-4 rounded-4 shadow-lg">
+          <div class="accordion" id="accordionExample">
+            <!-- Accordion Item 1 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  What is Employee Attrition Insight
+                </button>
+              </h2>
+              <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body">
+                  Employee Attrition Insight is an analysis used to understand
+                  why employees leave or stay. This insight helps companies make
+                  strategic decisions to improve employee retention.
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Item 2 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
+                >
+                  What do the Attrition labels mean: "Stayed" and "Leaves"?
+                </button>
+              </h2>
+              <div
+                id="collapseTwo"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingTwo"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body">
+                  <ul>
+                    <li>
+                      <b>Stayed (0)</b> Employees who remain with the company.
+                    </li>
+                    <li><b>Leaves (1)</b> Employees who leave the company.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Item 3 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree"
+                  aria-expanded="false"
+                  aria-controls="collapseThree"
+                >
+                  What is the purpose of this analysis?
+                </button>
+              </h2>
+              <div
+                id="collapseThree"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingThree"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body">
+                  <ul>
+                    The main objectives are:
+                    <li>
+                      To identify factors that influence employee retention and
+                      attrition.
+                    </li>
+                    <li>
+                      To provide insights to the company to improve employee
+                      satisfaction.
+                    </li>
+                    <li>To reduce costs due to high employee turnover.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Item 4 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingFour">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseFour"
+                  aria-expanded="false"
+                  aria-controls="collapseFour"
+                >
+                  How to determine whether an employee will "Stay" or "Leave"?
+                </button>
+              </h2>
+              <div
+                id="collapseFour"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingFour"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body">
+                  The prediction is done using a machine learning model that
+                  analyzes various parameters such as age, salary, job
+                  satisfaction level, overtime, and work experience.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Section -->
+    <section class="app" id="app">
+      <div class="container-fluid mt-5">
+        <div class="row">
+          <!-- Form Container -->
+          <div class="col-md-6">
+            <div class="form-container p-4 border rounded shadow-sm">
+              <form id="predictionForm" action="/" method="post">
+                <!-- Age -->
+                <div class="mb-3">
+                  <label for="age" class="form-label">Age</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="age"
+                    name="age"
+                    required
+                    placeholder="Enter your age here (e.g., 25)"
+                  />
+                </div>
+
+                <!-- Gender -->
+                <div class="mb-3">
+                  <label for="gender" class="form-label">Gender</label>
+                  <select
+                    class="form-select"
+                    id="gender"
+                    name="gender"
+                    required
+                  >
+                    <option value="0">Male</option>
+                    <option value="1">Female</option>
+                  </select>
+                </div>
+
+                <!-- Marital Status -->
+                <div class="mb-3">
+                  <label for="marital_status" class="form-label"
+                    >Marital Status</label
+                  >
+                  <select
+                    class="form-select"
+                    id="marital_status"
+                    name="marital_status"
+                    required
+                  >
+                    <option value="0">Married</option>
+                    <option value="1">Single</option>
+                    <option value="2">Divorced</option>
+                  </select>
+                </div>
+
+                <!-- Business Travel -->
+                <div class="mb-3">
+                  <label for="business_travel" class="form-label"
+                    >Business Travel
+                    <span class="text-danger"
+                      >* business trips undertaken by employees</span
+                    ></label
+                  >
+                  <select
+                    class="form-select"
+                    id="business_travel"
+                    name="business_travel"
+                    required
+                  >
+                    <option value="0">Travel Frequently</option>
+                    <option value="1">Travel Rarely</option>
+                    <option value="2">Non-Travel</option>
+                  </select>
+                </div>
+
+                <!-- Departement -->
+                <div class="mb-3">
+                  <label for="department" class="form-label">Department</label>
+                  <select class="form-select" id="department" name="department">
+                    <option value="0">Sales</option>
+                    <option value="1">Human Resources</option>
+                    <option value="2">Research &amp; Development</option>
+                  </select>
+                </div>
+
+                <!-- Distance From Home -->
+                <div class="mb-3">
+                  <label for="distance_from_home" class="form-label">
+                    Distance From Home
+                    <span class="text-danger">* in kilometers</span>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="distance_from_home"
+                    name="distance_from_home"
+                    placeholder="Enter distance from home to office (e.g., 10)"
+                    required
+                  />
+                </div>
+
+                <!-- Education -->
+                <div class="mb-3">
+                  <label for="education" class="form-label"
+                    >Education
+                    <span class="text-danger"
+                      >* employee education level</span
+                    ></label
+                  >
+                  <select class="form-select" id="education" name="education">
+                    <option value="1">Other</option>
+                    <option value="2">Senior High School</option>
+                    <option value="3">Bachelor</option>
+                    <option value="4">Master</option>
+                  </select>
+                </div>
+
+                <!-- Education Field -->
+                <div class="mb-3">
+                  <label for="education_field" class="form-label"
+                    >Education Field
+                    <span class="text-danger"
+                      >* education taken by employees</span
+                    >
+                  </label>
+                  <select
+                    class="form-select"
+                    id="education_field"
+                    name="education_field"
+                    required
+                  >
+                    <option value="0">Technical Degree</option>
+                    <option value="1">Human Resources</option>
+                    <option value="2">Marketing</option>
+                    <option value="3">Life Sciences</option>
+                    <option value="4">Other</option>
+                    <option value="5">Medical</option>
+                  </select>
+                </div>
+
+                <!-- Environment Satisfaction -->
+                <div class="mb-3">
+                  <label for="environment_satisfaction" class="form-label">
+                    Environment Satisfaction
+                  </label>
+                  <span class="text-danger"
+                    >* employee satisfaction in the work environment</span
+                  >
+
+                  <!-- Radio Buttons for satisfaction levels -->
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="environment_satisfaction"
+                      id="env_satisfaction_1"
+                      value="1"
+                      required
+                    />
+                    <label class="form-check-label" for="env_satisfaction_1">
+                      1 - Very Dissatisfied
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="environment_satisfaction"
+                      id="env_satisfaction_2"
+                      value="2"
+                    />
+                    <label class="form-check-label" for="env_satisfaction_2">
+                      2 - Dissatisfied
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="environment_satisfaction"
+                      id="env_satisfaction_3"
+                      value="3"
+                    />
+                    <label class="form-check-label" for="env_satisfaction_3">
+                      3 - Satisfied
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="environment_satisfaction"
+                      id="env_satisfaction_4"
+                      value="4"
+                    />
+                    <label class="form-check-label" for="env_satisfaction_4">
+                      4 - Very Satisfied
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Job Involvement -->
+                <div class="mb-3">
+                  <label for="job_involvement" class="form-label">
+                    Job Involvement
+                    <span class="text-danger"
+                      >* employee involvement in their work</span
+                    >
+                  </label>
+
+                  <!-- Radio Buttons for job involvement levels -->
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_involvement"
+                      id="job_involvement_1"
+                      value="1"
+                      required
+                    />
+                    <label class="form-check-label" for="job_involvement_1">
+                      1 - Low Involvement
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_involvement"
+                      id="job_involvement_2"
+                      value="2"
+                    />
+                    <label class="form-check-label" for="job_involvement_2">
+                      2 - Moderate Involvement
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_involvement"
+                      id="job_involvement_3"
+                      value="3"
+                    />
+                    <label class="form-check-label" for="job_involvement_3">
+                      3 - High Involvement
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_involvement"
+                      id="job_involvement_4"
+                      value="4"
+                    />
+                    <label class="form-check-label" for="job_involvement_4">
+                      4 - Very High Involvement
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Job Level -->
+                <div class="mb-3">
+                  <label for="job_level" class="form-label"
+                    >Job Level<span class="text-danger">
+                      * employee job level in the company</span
+                    >
+                  </label>
+
+                  <!-- Radio Buttons for job levels -->
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_level"
+                      id="job_level_1"
+                      value="1"
+                      required
+                    />
+                    <label class="form-check-label" for="job_level_1">
+                      1 - Entry Level
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_level"
+                      id="job_level_2"
+                      value="2"
+                    />
+                    <label class="form-check-label" for="job_level_2">
+                      2 - Junior Level
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_level"
+                      id="job_level_3"
+                      value="3"
+                    />
+                    <label class="form-check-label" for="job_level_3">
+                      3 - Mid Level
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_level"
+                      id="job_level_4"
+                      value="4"
+                    />
+                    <label class="form-check-label" for="job_level_4">
+                      4 - Senior Level
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_level"
+                      id="job_level_5"
+                      value="5"
+                    />
+                    <label class="form-check-label" for="job_level_5">
+                      5 - Executive Level
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Job Role -->
+                <div class="mb-3">
+                  <label for="job_role" class="form-label">Job Role</label>
+                  <select
+                    class="form-select"
+                    id="job_role"
+                    name="job_role"
+                    required
+                  >
+                    <option value="0">Research Scientist</option>
+                    <option value="1">Human Resources</option>
+                    <option value="2">Healthcare Representative</option>
+                    <option value="3">Sales Representative</option>
+                    <option value="4">Manufacturing Director</option>
+                    <option value="5">Sales Executive</option>
+                    <option value="6">Laboratory Technician</option>
+                    <option value="7">Research Director</option>
+                    <option value="8">Manager</option>
+                  </select>
+                </div>
+
+                <!-- Job Satisfaction -->
+                <div class="mb-3">
+                  <label for="job_satisfaction" class="form-label"
+                    >Job Satisfaction
+                    <span class="text-danger"
+                      >* employee satisfaction with the job</span
+                    >
+                  </label>
+
+                  <!-- Radio Buttons for job satisfaction -->
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_satisfaction"
+                      id="job_satisfaction_1"
+                      value="1"
+                      required
+                    />
+                    <label class="form-check-label" for="job_satisfaction_1">
+                      1 - Very Dissatisfied
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_satisfaction"
+                      id="job_satisfaction_2"
+                      value="2"
+                    />
+                    <label class="form-check-label" for="job_satisfaction_2">
+                      2 - Dissatisfied
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_satisfaction"
+                      id="job_satisfaction_3"
+                      value="3"
+                    />
+                    <label class="form-check-label" for="job_satisfaction_3">
+                      3 - Satisfied
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="job_satisfaction"
+                      id="job_satisfaction_4"
+                      value="4"
+                    />
+                    <label class="form-check-label" for="job_satisfaction_4">
+                      4 - Very Satisfied
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Monthly Income -->
+                <div class="mb-3">
+                  <label for="monthly_income" class="form-label"
+                    >Monthly Income</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="monthly_income"
+                    name="monthly_income"
+                    required
+                    placeholder="Enter monthly income (e.g., 5000000)"
+                  />
+                </div>
+
+                <!-- Salary Slab -->
+                <div class="mb-3">
+                  <label for="salary_slab" class="form-label"
+                    >Salary Slab
+                    <span class="text-danger"
+                      >* salary category or income range</span
+                    ></label
+                  >
+                  <select
+                    class="form-select"
+                    id="salary_slab"
+                    name="salary_slab"
+                    required
+                  >
+                    <option value="0">5jt-10jt</option>
+                    <option value="1">Upto 5jt</option>
+                    <option value="2">15jt+</option>
+                    <option value="3">10jt-15jt</option>
+                  </select>
+                </div>
+
+                <!-- OverTime -->
+                <div class="mb-3">
+                  <label for="overtime" class="form-label">Work Overtime</label>
+                  <select
+                    class="form-select"
+                    id="overtime"
+                    name="overtime"
+                    required
+                  >
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                </div>
+
+                <!-- Total Working Years -->
+                <div class="mb-3">
+                  <label for="total_working_years" class="form-label"
+                    >Total Working Per Years</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="total_working_years"
+                    name="total_working_years"
+                    required
+                    placeholder="Enter total working years (e.g., 5)"
+                  />
+                </div>
+
+                <!-- Work Life Balance -->
+                <div class="mb-3">
+                  <label for="work_life_balance" class="form-label">
+                    Work Life Balance
+                  </label>
+
+                  <!-- Radio Buttons for work life balance levels -->
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="work_life_balance"
+                      id="work_life_balance_1"
+                      value="1"
+                      required
+                    />
+                    <label class="form-check-label" for="work_life_balance_1">
+                      1 - Very Poor
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="work_life_balance"
+                      id="work_life_balance_2"
+                      value="2"
+                    />
+                    <label class="form-check-label" for="work_life_balance_2">
+                      2 - Poor
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="work_life_balance"
+                      id="work_life_balance_3"
+                      value="3"
+                    />
+                    <label class="form-check-label" for="work_life_balance_3">
+                      3 - Good
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="work_life_balance"
+                      id="work_life_balance_4"
+                      value="4"
+                    />
+                    <label class="form-check-label" for="work_life_balance_4">
+                      4 - Excellent
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Years At Company -->
+                <div class="mb-3">
+                  <label for="years_at_company" class="form-label"
+                    >How many years in the company</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="years_at_company"
+                    name="years_at_company"
+                    required
+                    placeholder="Enter years at company (e.g., 5)"
+                  />
+                </div>
+
+                <!-- Years In Current Role -->
+                <div class="mb-3">
+                  <label for="years_in_current_role" class="form-label"
+                    >How many years in the following position</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="years_in_current_role"
+                    name="years_in_current_role"
+                    required
+                    placeholder="Enter years in current role (e.g., 2)"
+                  />
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                  type="button"
+                  class="btn btn-primary w-100"
+                  id="predictButton"
+                >
+                  Prediksi
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Result Container -->
+          <div class="col-md-6">
+            <div
+              class="result-container p-4 border rounded shadow-sm text-center"
+            >
+              <h2>Hasil Prediksi Anda Tampil di Sini</h2>
+              <p id="result-text"></p>
+              <p id="probability"></p>
+              <div id="predictionResult"></div>
+              <button
+                type="button"
+                id="resetButton"
+                class="btn btn-primary mt-3 w-50"
+              >
+                Reset Form
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="container-fluid bg-primary-subtle text-center p-4 fw-bolder">
+      Copyright &copy; 2024 | All rights reserved.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+  <script src="{{url_for('static', filename='script.js')}}"></script>
+</html>
