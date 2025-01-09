@@ -1,28 +1,31 @@
-# Employee Performance Assessment Website
+# ⚖️ HR Assessment Tool ⚖️ 
 
-## Overview
+## 🌟 Overview
 
-This project is a web application designed to predict employee attrition using machine learning. The application allows users to input various employee attributes and receive a prediction on whether the employee will stay or leave the company.
+HR Assessment Tool is a web application designed to help HR departments assess employee performance and decide whether employees should stay with the company or be considered for leave, based on various performance metrics.
 
-## Project Structure
+## 📂 Project Structure
 
-## Files and Directories
+### Files and Directories
 
-- **app.py**: The main Flask application file that handles routing, form submissions, and predictions.
-- **job_predict.sql**: SQL script to create and populate the `job_data` table in the database.
-- **model/final_model.pkl**: The trained machine learning model used for predictions.
+- **app.py**: Main Flask application file for routing, form submissions, and predictions.
+- **job_predict.sql**: SQL script for creating and populating the `job_data` table in the database.
+- **model/final_model.pkl**: Trained machine learning model used for employee performance predictions.
 - **static/assets/styling.css**: Custom CSS for styling the web application.
-- **static/script.js**: JavaScript file for handling form submissions and displaying results.
-- **templates/index.html**: HTML template for the web application's user interface.
-- **requirements.txt**: List of Python dependencies required for the project.
+- **static/script.js**: JavaScript for form handling and result display.
+- **templates/index.html**: HTML template for the user interface.
+- **requirements.txt**: List of Python dependencies for the project.
 
-## Setup and Installation
+## ⚙️ Setup and Installation
 
 1. **Clone the repository**:
 
    ```sh
-   git clone https://github.com/aurelioo29/hr-analytic.git
-   cd hr-analytic
+   git clone https://github.com/aurelioo29/HR-Assessment-Tool.git
+   ```
+
+   ```sh
+   cd HR-Assessment-Tool
    ```
 
 2. **Create a virtual environment**:
@@ -40,26 +43,18 @@ This project is a web application designed to predict employee attrition using m
    - On Windows:
 
    ```sh
-   source env/bin/activate
-   ```
-
-   Activate environtment
-
-   ```sh
    env\Scripts\activate
    ```
 
 3. **Install the dependencies**:
-
    ```sh
    pip install -r requirements.txt
    ```
-
 4. **Set up the database**:
 
-   - Ensure you have MySQL installed and running.
+   - Ensure MySQL is installed and running.
    - Create a database named `job_predict`.
-   - Run the SQL and import our database `job_predict.sql`.
+   - Import `job_predict.sql` into the database.
 
 5. **Run the Flask application**:
 
@@ -68,15 +63,18 @@ This project is a web application designed to predict employee attrition using m
    ```
 
 6. **Access the application**:
-   Open your web browser and navigate to `http://127.0.0.1:5000`.
 
-## Usage
+   Open your web browser and navigate to `http://127.0.0.1:5000`. 🌐
 
-1. Fill out the form with the required employee attributes.
-2. Click the "Prediksi" button to get the prediction.
-3. The prediction result will be displayed along with the input data and classification report.
+## 📝 Usage
 
-## Dependencies
+1. Fill out the form with employee attributes. 🏥
+2. Click the "**Prediksi**" button for the prediction. 🔮
+3. The result will be shown along with the input data and classification report. 📊
+
+## 📦 Dependencies
+
+This project uses the following dependencies:
 
 - Flask
 - Flask-SQLAlchemy
@@ -87,6 +85,6 @@ This project is a web application designed to predict employee attrition using m
 - scipy
 - joblib
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request.
+Contributions are welcome! Please fork the repository and submit a pull request. ✨
